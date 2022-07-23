@@ -5,8 +5,8 @@
     margin: 0%;
 }
 img{
-    width: 3.5%;
-    height: 3.5%;
+    width: 3.5cm;
+    height: 3.5cm;
 }
 .menu{
     background-color: black;
@@ -14,4 +14,11 @@ img{
 
 *::selection{
     background-color: rgb(255, 0, 0);
+}
+a{
+    color: rgb(255, 255, 255);
+    width: 5cm;
+    height: 5cm;
+    font-size: larger;
+    justify-content: center;
 }
