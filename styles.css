@@ -8,3 +8,10 @@ img{
     width: 3.5%;
     height: 3.5%;
 }
+.menu{
+    background-color: black;
+}
+
+*::selection{
+    background-color: rgb(255, 0, 0);
+}
