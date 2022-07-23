@@ -22,3 +22,7 @@ a{
     font-size: larger;
     justify-content: center;
 }
+body{
+    background: radial-gradient(#07008a 50%,
+    #b10000 100%);
+}
