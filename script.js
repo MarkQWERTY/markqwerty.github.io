@@ -1,4 +1,4 @@
 function change(){
-    location.href="calculadora.html";
+    window.location="calculadora.html";
     console.log("cambiado")
 }
