@@ -9,19 +9,38 @@ a{
     color: brown;
     font-family: 'Roboto Condensed', sans-serif;
     font-size: 30px;
-    margin-inline-end: 30px
+    margin-inline-end: 30px;
 
 }
 #last{
     margin-inline: 10mm;
 
 }
+p{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+}
 body{
     margin:0;
     padding:0;
 }
-img{
+[src="/img/BannerWEB.png"]{
+    height: 10cm;
+   width: 100%;
+}
+#perfil{
+    margin-inline-start: 55%;
     width: 2cm;
     height: 2cm;
-    display: inline-flex;
+}
+span{
+    margin-inline-end: 30px;
+    align-self: center;
+    text-decoration: none;
+    width: 2cm;
+    height: 2cm;
+}
+.banner{
+    width: 100cm;
+    height: auto;
 }
