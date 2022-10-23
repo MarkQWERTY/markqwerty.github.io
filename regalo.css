@@ -1,0 +1,17 @@
+body{
+    width: 100%;
+    height: 100%;
+    background: rgb(2,0,36);
+    background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(9,59,121,1) 0%, rgba(41,219,255,1) 97%);
+}
+h1{
+    color: rgb(0, 9, 182);
+    font-family: 'Fuzzy Bubbles', cursive;
+}
+.end{
+    margin-top: 40px;
+}
+h2,h3{
+    font-family: 'Poppins', sans-serif;
+    color: brown;
+}
