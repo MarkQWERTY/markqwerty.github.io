@@ -21,69 +21,104 @@ let punto = document.getElementById(".")
 let Reset= document.getElementById("Reset")
 let Resultado=document.getElementById("Resultado")
 let caja=document.getElementById("caja")
+let value="0"
 punto.addEventListener("click", function(){
     caja.innerHTML+="."
+    value+="."
 })
 raizc.addEventListener("click", function(){
-    caja.innerHTML+="**0.5"
+    caja.innerHTML+="√"
+    value+="**0.5"
 })
 elevar.addEventListener("click", function(){
-    caja.innerHTML+="**"
+    
 })
 x2.addEventListener("click", function(){
-    caja.innerHTML+="**2"
+    caja.innerHTML+="^2"
+    value+="**2"
 })
 n1.addEventListener("click", function(){
     caja.innerHTML+="1"
+    value+="1"
 })
 n2.addEventListener("click", function(){
     caja.innerHTML+="2"
+    value+="2"
 })
 n3.addEventListener("click", function(){
     caja.innerHTML+="3"
+    value+="3"
 })
 n4.addEventListener("click", function(){
     caja.innerHTML+="4"
+    value+="4"
 })
 
 n5.addEventListener("click", function(){
     caja.innerHTML+="5"
+    value+="5"
 })
 n6.addEventListener("click", function(){
     caja.innerHTML+="6"
+    value+="6"
 })
 n7.addEventListener("click", function(){
     caja.innerHTML+="7"
+    value+="7"
 })
 n8.addEventListener("click", function(){
     caja.innerHTML+="8"
+    value+="8"
 })
 n9.addEventListener("click", function(){
     caja.innerHTML+="9"
+    value+="9"
 })
 n0.addEventListener("click", function(){
     caja.innerHTML+="0"
+    value+="0"
 })
 suma.addEventListener("click", function(){
     caja.innerHTML+="+"
+    value+="+"
 })
 resta.addEventListener("click", function(){
     caja.innerHTML+="-"
+    value+="-"
 })
 multiplicacion.addEventListener("click", function(){
-    caja.innerHTML+="*"
+    caja.innerHTML+="x"
+    value+="*"
 })
 division.addEventListener("click", function(){
-    caja.innerHTML+="/"
+    caja.innerHTML+=":"
+    value+="/"
 })
 
 Reset.addEventListener("click",function(){
     caja.innerHTML=""
+    value=""
 })
 Resultado.addEventListener("click", function(){
-    caja.innerHTML=eval(caja.innerHTML)
+    a=eval(value)
+    caja.innerHTML=a
 })
 document.getElementById("del").addEventListener("click",function(){
     caja.innerHTML= caja.innerHTML-" "
     
+})
+document.querySelector(".settings").addEventListener("click", function(){
+    document.writeln("")
+})
+document.getElementById("ans").addEventListener("click", function(){
+    caja.innerHTML+=a
+    value+=a
+})
+document.getElementById("p1").addEventListener("click", function(){
+    caja.innerHTML+="("
+    value+="("
+})
+document.getElementById("p2").addEventListener("click", function(){
+    caja.innerHTML+=")"
+    value+=")"
 })
