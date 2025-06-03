@@ -1,46 +1,200 @@
-.bar{
-    background-color: rgb(40, 174, 49);
+/* styles.css */
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos generales */
+body {
+    font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Navegación */
+nav {
+    background: #333;
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 1rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: #ff9800;
+}
+
+.navbar-container {
     display: flex;
-    
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
-a{
-    align-self: center;
+.navbar-container ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.navbar-brand {
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    font-size: 1.7rem;
+    color: #ff9800;
+    margin-right: 2rem;
     text-decoration: none;
-    color: brown;
-    font-family: 'Roboto Condensed', sans-serif;
-    font-size: 30px;
-    margin-inline-end: 30px;
+    letter-spacing: 1px;
+}
 
+/* Contenido principal */
+main {
+    max-width: 1100px;
+    margin: 2rem auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
-#last{
-    margin-inline: 10mm;
 
+/* Hero */
+.hero {
+    text-align: center;
+    margin-bottom: 2.5rem;
 }
-p{
-    font-family: 'Open Sans', sans-serif;
-    font-size: 15px;
+.hero h1 {
+    font-size: 2.3rem;
+    color: #222;
+    margin-bottom: 0.7rem;
+    font-family: 'Roboto Condensed', Arial, sans-serif;
 }
-body{
-    margin:0;
-    padding:0;
+.hero p {
+    font-size: 1.15rem;
+    color: #555;
 }
-[src="/img/BannerWEB.png"]{
-    height: 10cm;
-   width: 100%;
+
+/* Catálogo de proyectos */
+.project-catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
 }
-#perfil{
-    margin-inline-start: 55%;
-    width: 2cm;
-    height: 2cm;
+
+.project-card {
+    background: #fafafa;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 1.5rem 1rem 1.2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.15s, box-shadow 0.15s;
 }
-span{
-    margin-inline-end: 30px;
-    align-self: center;
+.project-card:hover {
+    transform: translateY(-6px) scale(1.025);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.13);
+}
+
+.project-image {
+    width: 100%;
+    max-width: 220px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 7px;
+    margin-bottom: 1rem;
+    background: #e0e0e0;
+}
+
+.project-card h3 {
+    font-size: 1.25rem;
+    color: #ff9800;
+    margin-bottom: 0.5rem;
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    text-align: center;
+}
+
+.project-card p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.project-link {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    background: #ff9800;
+    color: #fff;
+    border-radius: 5px;
     text-decoration: none;
-    width: 2cm;
-    height: 2cm;
+    font-weight: 600;
+    transition: background 0.2s;
+    font-size: 1rem;
+    margin-bottom: 15px;
 }
-.banner{
-    width: 100cm;
-    height: auto;
+.project-link:hover {
+    background: #e67c00;
+}
+
+/* Secciones */
+section {
+    margin-bottom: 2rem;
+}
+
+section h2 {
+    color: #ff9800;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    text-align: center;
+}
+
+/* Pie de página */
+footer {
+    background: #222;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    main {
+        padding: 1rem;
+    }
+    .project-catalog {
+        gap: 1.2rem;
+    }
+}
+@media (max-width: 600px) {
+    main {
+        padding: 0.5rem;
+    }
+    .hero h1 {
+        font-size: 1.3rem;
+    }
+    section h2 {
+        font-size: 1.1rem;
+    }
+    .project-card {
+        padding: 1rem 0.5rem 0.8rem 0.5rem;
+    }
+    .project-image {
+        max-width: 100%;
+        height: 110px;
+    }
 }
