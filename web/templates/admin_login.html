@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acceso Administrador - Marcos García</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#111508",
+                        "surface": "#111508",
+                        "surface-container": "#1e2113",
+                        "surface-container-low": "#1a1d10",
+                        "surface-container-high": "#282b1d",
+                        "surface-container-highest": "#333627",
+                        "primary": "#ffffff",
+                        "primary-fixed": "#c3f400",
+                        "on-primary-fixed": "#161e00",
+                        "on-surface": "#e2e4cf",
+                        "on-surface-variant": "#c4c9ac",
+                        "outline-variant": "#444933",
+                        "outline": "#8e9379"
+                    },
+                    fontFamily: {
+                        mono: ["JetBrains Mono", "Space Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="/web/static/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/web/static/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/web/static/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/web/static/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/web/static/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/web/static/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/web/static/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/web/static/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/web/static/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/web/static/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/web/static/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/web/static/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/web/static/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/web/static/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/web/static/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body class="bg-background font-mono text-on-surface flex flex-col justify-between min-h-screen">
+
+    <header class="w-full border-b border-outline-variant py-4 px-6">
+        <div class="max-w-[1440px] mx-auto flex justify-between items-center">
+            <a href="/" class="text-xs text-primary-fixed hover:text-white flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">arrow_back</span> Volver al inicio
+            </a>
+            <div class="flex items-center gap-2">
+                <img src="/web/static/img/favicon/favicon-96x96.png" alt="favicon" class="w-8 h-8">
+                <span class="text-xs font-bold text-on-surface-variant">PANEL DE CONTROL</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center p-6">
+        <div class="max-w-md w-full border border-outline-variant bg-surface-container p-8 shadow-2xl">
+            <div class="text-center mb-8">
+                <div
+                    class="w-12 h-12 bg-primary-fixed text-on-primary-fixed mx-auto flex items-center justify-center mb-3">
+                    <span class="material-symbols-outlined text-2xl">lock</span>
+                </div>
+                <h1 class="text-2xl font-bold text-primary uppercase">ACCESO ADMIN</h1>
+                <p class="text-xs text-on-surface-variant mt-1">Ingresa tu ID de administrador y contraseña</p>
+            </div>
+
+            <div id="login-alert" class="hidden p-3 text-xs font-bold mb-4"></div>
+
+            <form id="login-form" class="flex flex-col gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-primary-fixed mb-1">ID de Administrador *</label>
+                    <input type="number" id="login-id" required value="1"
+                        class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none"
+                        placeholder="Ej: 1">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-primary-fixed mb-1">Contraseña *</label>
+                    <input type="password" id="login-password" required
+                        class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none"
+                        placeholder="••••••••">
+                </div>
+
+                <button type="submit"
+                    class="py-3 bg-primary-fixed text-on-primary-fixed font-bold hover:bg-white transition-colors border border-primary-fixed flex items-center justify-center gap-2 mt-2">
+                    INICIAR SESIÓN <span class="material-symbols-outlined text-sm">login</span>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="border-t border-outline-variant py-4 px-6 text-center text-xs text-on-surface-variant">
+        &copy; 2026 Marcos García. Acceso restringido.
+    </footer>
+
+    <script src="/static/js/admin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+/* Styles for Portfolio v2 */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: #111508;
+    color: #e2e4cf;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111508;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444933;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c3f400;
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{.Project.Nombre_p}} - Detalle del Proyecto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#111508",
+                        "surface": "#111508",
+                        "surface-container": "#1e2113",
+                        "surface-container-low": "#1a1d10",
+                        "surface-container-high": "#282b1d",
+                        "surface-container-highest": "#333627",
+                        "primary": "#ffffff",
+                        "primary-fixed": "#c3f400",
+                        "on-primary-fixed": "#161e00",
+                        "on-surface": "#e2e4cf",
+                        "on-surface-variant": "#c4c9ac",
+                        "outline-variant": "#444933",
+                        "outline": "#8e9379"
+                    },
+                    fontFamily: {
+                        mono: ["JetBrains Mono", "Space Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="/web/static/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/web/static/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/web/static/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/web/static/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/web/static/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/web/static/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/web/static/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/web/static/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/web/static/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/web/static/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/web/static/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/web/static/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/web/static/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/web/static/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/web/static/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body class="bg-background font-mono text-on-surface">
+
+    <header class="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-outline-variant">
+        <div class="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 text-xs text-primary-fixed hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-sm">arrow_back</span> VOLVER AL PORTAFOLIO
+            </a>
+            <div class="flex items-center gap-3">
+                <img src="/web/static/img/favicon/favicon-96x96.png" alt="favicon" class="w-8 h-8">
+                <span class="text-xl font-bold tracking-tighter text-primary">MARCOS GARCÍA</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full pt-28 pb-24 px-6">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="mb-8 border-b border-outline-variant pb-6">
+                <span class="text-xs text-primary-fixed font-bold block mb-2">PROYECTO #{{.Project.ID_proyecto}}</span>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-primary uppercase mb-4">{{.Project.Nombre_p}}</h1>
+                <p class="text-sm text-on-surface-variant max-w-3xl leading-relaxed">{{.Project.Descripcion}}</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div class="lg:col-span-2 border border-outline-variant bg-surface-container p-8">
+                    <h2 class="text-xl font-bold text-primary mb-4 border-l-4 border-primary-fixed pl-3">VISIÓN GENERAL
+                    </h2>
+                    <p class="text-sm text-on-surface-variant leading-relaxed mb-6">
+                        Este proyecto fue diseñado e implementado como parte del portafolio profesional para demostrar
+                        capacidad técnica en desarrollo backend con Go, integración con PostgreSQL y despliegue
+                        continuo.
+                    </p>
+                    <div class="p-6 border border-outline-variant bg-surface-container-low mb-6">
+                        <span class="text-xs font-bold text-primary-fixed block mb-2">DETALLES TÉCNICOS &
+                            ARQUITECTURA</span>
+                        <ul class="list-disc list-inside text-xs text-on-surface-variant space-y-2">
+                            <li>Backend en Go con arquitectura limpia monolítica modular.</li>
+                            <li>Autenticación segura mediante JWT y hashing de contraseñas con Bcrypt.</li>
+                            <li>Persistencia de datos relacional con consultas optimizadas.</li>
+                            <li>Formulario de contacto funcional y panel de administración interactivo.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border border-outline-variant bg-surface-container p-6 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-primary mb-4 border-l-4 border-primary-fixed pl-3">ACCESOS &
+                            ENLACES</h2>
+                        <div class="flex flex-col gap-4">
+                            <div class="p-4 border border-outline-variant bg-surface-container-low">
+                                <span class="text-xs text-on-surface-variant block mb-1">REPOSITORIO DE CÓDIGO</span>
+                                <a href="{{.Project.Github}}" target="_blank" rel="noopener noreferrer"
+                                    class="text-sm font-bold text-primary-fixed hover:underline flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">code</span> Ver en GitHub
+                                </a>
+                            </div>
+
+                            {{if .Project.Enlace}}
+                            <div class="p-4 border border-outline-variant bg-surface-container-low">
+                                <span class="text-xs text-on-surface-variant block mb-1">DEMO O APLICACIÓN EN
+                                    VIVO</span>
+                                <a href="{{.Project.Enlace}}" target="_blank" rel="noopener noreferrer"
+                                    class="text-sm font-bold text-primary-fixed hover:underline flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">play_arrow</span> Probar Aplicación
+                                </a>
+                            </div>
+                            {{else}}
+                            <div class="p-4 border border-outline-variant bg-surface-container-low opacity-60">
+                                <span class="text-xs text-on-surface-variant block">Demo en vivo no disponible para este
+                                    proyecto.</span>
+                            </div>
+                            {{end}}
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-outline-variant">
+                        <a href="/"
+                            class="w-full py-3 border border-primary text-primary hover:bg-surface-container-high transition-colors font-bold text-center block text-xs">
+                            VOLVER A LA LISTA
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-outline-variant py-8 px-6 bg-background">
+        <div class="max-w-[1440px] mx-auto text-center text-xs text-on-surface-variant">
+            &copy; 2026 Marcos García. Todos los derechos reservados.
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Administración - Marcos García</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#111508",
+                        "surface": "#111508",
+                        "surface-container": "#1e2113",
+                        "surface-container-low": "#1a1d10",
+                        "surface-container-high": "#282b1d",
+                        "surface-container-highest": "#333627",
+                        "primary": "#ffffff",
+                        "primary-fixed": "#c3f400",
+                        "on-primary-fixed": "#161e00",
+                        "on-surface": "#e2e4cf",
+                        "on-surface-variant": "#c4c9ac",
+                        "outline-variant": "#444933",
+                        "outline": "#8e9379"
+                    },
+                    fontFamily: {
+                        mono: ["JetBrains Mono", "Space Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="/web/static/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/web/static/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/web/static/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/web/static/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/web/static/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/web/static/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/web/static/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/web/static/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/web/static/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/web/static/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/web/static/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/web/static/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/web/static/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/web/static/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/web/static/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body class="bg-background font-mono text-on-surface">
+
+    <header class="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-outline-variant">
+        <div class="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="/web/static/img/favicon/favicon-96x96.png" alt="favicon" class="w-8 h-8">
+                <div>
+                    <span class="text-lg font-bold tracking-tighter text-primary block leading-none">PANEL
+                        ADMINISTRADOR</span>
+                    <span id="admin-name-tag" class="text-xs text-primary-fixed">Cargando datos...</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="/" target="_blank"
+                    class="px-3 py-2 text-xs border border-outline hover:border-primary-fixed flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">visibility</span> Ver Web Pública
+                </a>
+                <button id="logout-btn"
+                    class="px-3 py-2 text-xs bg-red-950 text-red-200 border border-red-800 hover:bg-red-900 transition-colors flex items-center gap-1 font-bold">
+                    <span class="material-symbols-outlined text-sm">logout</span> Salir
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full pt-28 pb-24 px-6">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-8">
+            <!-- STATS RESUMEN -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 border border-outline-variant bg-surface-container flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-on-surface-variant block uppercase font-bold">Total Proyectos</span>
+                        <span id="stat-projects" class="text-4xl font-extrabold text-primary-fixed">0</span>
+                    </div>
+                    <span class="material-symbols-outlined text-4xl text-outline">folder</span>
+                </div>
+                <div class="p-6 border border-outline-variant bg-surface-container flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-on-surface-variant block uppercase font-bold">Formularios
+                            Recibidos</span>
+                        <span id="stat-messages" class="text-4xl font-extrabold text-primary-fixed">0</span>
+                    </div>
+                    <span class="material-symbols-outlined text-4xl text-outline">mail</span>
+                </div>
+                <div class="p-6 border border-outline-variant bg-surface-container flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-on-surface-variant block uppercase font-bold">Estado del
+                            Servidor</span>
+                        <span class="text-xl font-bold text-green-400">ONLINE 99.9%</span>
+                    </div>
+                    <span class="material-symbols-outlined text-4xl text-green-400">check_circle</span>
+                </div>
+            </div>
+
+            <!-- BOTONES NAVEGACIÓN PANEL -->
+            <div class="flex border-b border-outline-variant gap-4">
+                <button id="tab-projects"
+                    class="py-3 px-6 text-sm font-bold border-b-2 border-primary-fixed text-primary-fixed">
+                    GESTIONAR PROYECTOS
+                </button>
+                <button id="tab-submissions"
+                    class="py-3 px-6 text-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-primary">
+                    MENSAJES DE CONTACTO
+                </button>
+                <button id="tab-security"
+                    class="py-3 px-6 text-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-primary">
+                    CAMBIAR CONTRASEÑA
+                </button>
+            </div>
+
+            <!-- SECCIÓN PROYECTOS -->
+            <section id="section-projects" class="flex flex-col gap-6">
+                <div class="flex justify-between items-center border-b border-outline-variant pb-4">
+                    <h2 class="text-xl font-bold text-primary uppercase">PROYECTOS PUBLICADOS</h2>
+                    <button id="btn-new-project"
+                        class="px-4 py-2 bg-primary-fixed text-on-primary-fixed font-bold hover:bg-white transition-colors flex items-center gap-1 text-xs">
+                        <span class="material-symbols-outlined text-sm">add</span> NUEVO PROYECTO
+                    </button>
+                </div>
+
+                <!-- FORMULARIO CREAR / EDITAR PROYECTO MODAL/BOX -->
+                <div id="project-form-container"
+                    class="hidden p-6 border border-primary-fixed bg-surface-container-high">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="project-form-title" class="text-lg font-bold text-primary-fixed">NUEVO PROYECTO</h3>
+                        <button id="btn-cancel-project"
+                            class="text-xs text-on-surface-variant hover:text-white">CANCELAR</button>
+                    </div>
+                    <form id="project-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="hidden" id="project-id">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-primary-fixed mb-1">Nombre del Proyecto *</label>
+                            <input type="text" id="project-nombre" required
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none"
+                                placeholder="Ej: Mi Tienda Online">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-primary-fixed mb-1">Descripción *</label>
+                            <textarea id="project-descripcion" rows="3" required
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none"
+                                placeholder="Descripción detallada del proyecto"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-primary-fixed mb-1">URL GitHub *</label>
+                            <input type="url" id="project-github" required
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none"
+                                placeholder="https://github.com/usuario/repo">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-primary-fixed mb-1">URL Enlace / Demo
+                                (Opcional)</label>
+                            <input type="url" id="project-enlace"
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none"
+                                placeholder="https://demo.ejemplo.com">
+                        </div>
+                        <div class="md:col-span-2 flex justify-end gap-3 mt-2">
+                            <button type="submit"
+                                class="px-6 py-3 bg-primary-fixed text-on-primary-fixed font-bold hover:bg-white text-xs">GUARDAR
+                                PROYECTO</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TABLA DE PROYECTOS -->
+                <div class="overflow-x-auto border border-outline-variant bg-surface-container">
+                    <table class="w-full text-left text-xs">
+                        <thead
+                            class="bg-surface-container-high text-primary-fixed uppercase border-b border-outline-variant">
+                            <tr>
+                                <th class="p-4">ID</th>
+                                <th class="p-4">Nombre</th>
+                                <th class="p-4">Descripción</th>
+                                <th class="p-4">GitHub</th>
+                                <th class="p-4">Demo</th>
+                                <th class="p-4 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projects-table-body" class="divide-y divide-outline-variant text-on-surface-variant">
+                            <!-- Inyectado dinámicamente con JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECCIÓN FORMULARIOS DE CONTACTO -->
+            <section id="section-submissions" class="hidden flex flex-col gap-6">
+                <div class="border-b border-outline-variant pb-4">
+                    <h2 class="text-xl font-bold text-primary uppercase">MENSAJES Y FORMULARIOS DE CONTACTO</h2>
+                </div>
+                <div class="overflow-x-auto border border-outline-variant bg-surface-container">
+                    <table class="w-full text-left text-xs">
+                        <thead
+                            class="bg-surface-container-high text-primary-fixed uppercase border-b border-outline-variant">
+                            <tr>
+                                <th class="p-4">ID</th>
+                                <th class="p-4">Fecha</th>
+                                <th class="p-4">Nombre</th>
+                                <th class="p-4">Correo</th>
+                                <th class="p-4">Teléfono</th>
+                                <th class="p-4">Mensaje</th>
+                                <th class="p-4 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissions-table-body"
+                            class="divide-y divide-outline-variant text-on-surface-variant">
+                            <!-- Inyectado dinámicamente con JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECCIÓN SEGURIDAD / CAMBIAR CONTRASEÑA -->
+            <section id="section-security" class="hidden flex flex-col gap-6">
+                <div class="border-b border-outline-variant pb-4">
+                    <h2 class="text-xl font-bold text-primary uppercase">SEGURIDAD - CAMBIAR CONTRASEÑA</h2>
+                </div>
+                <div class="max-w-md p-6 border border-outline-variant bg-surface-container">
+                    <div id="password-alert" class="hidden p-3 text-xs font-bold mb-4"></div>
+                    <form id="change-password-form" class="flex flex-col gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-primary-fixed mb-1">Contraseña Actual *</label>
+                            <input type="password" id="old-password" required
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-primary-fixed mb-1">Nueva Contraseña *</label>
+                            <input type="password" id="new-password" required
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none">
+                        </div>
+                        <button type="submit"
+                            class="py-3 bg-primary-fixed text-on-primary-fixed font-bold hover:bg-white transition-colors border border-primary-fixed text-xs mt-2">
+                            ACTUALIZAR CONTRASEÑA
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="/static/js/admin.js"></script>
+</body>
+
+</html>
