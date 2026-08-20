@@ -22,9 +22,9 @@ func main() {
 	defer database.Close()
 
 	// Services
-	authService := services.NewAuthService(database, cfg.JWTSecret)
-	projectService := services.NewProjectService(database)
-	contactService := services.NewContactService(database)
+	authService := services.NewAuthService(database, cfg.JWTSecret, cfg.DBDriver)
+	projectService := services.NewProjectService(database, cfg.DBDriver)
+	contactService := services.NewContactService(database, cfg.DBDriver)
 
 	// Handlers
 	authHandler := handlers.NewAuthHandler(authService)

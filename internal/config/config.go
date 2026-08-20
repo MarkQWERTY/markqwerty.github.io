@@ -6,21 +6,32 @@ import (
 )
 
 type Config struct {
-	Port                string
-	JWTSecret           string
-	DBDriver            string
-	DBSource            string
-	AdminDefaultID      int
-	AdminDefaultPass    string
-	AdminDefaultNombre  string
-	AdminDefaultApe     string
+	Port               string
+	JWTSecret          string
+	DBDriver           string
+	DBSource           string
+	AdminDefaultID     int
+	AdminDefaultPass   string
+	AdminDefaultNombre string
+	AdminDefaultApe    string
 }
 
 func LoadConfig() *Config {
 	port := getEnv("PORT", "8080")
 	jwtSecret := getEnv("JWT_SECRET", "super_secret_jwt_key_change_in_production")
-	dbDriver := getEnv("DB_DRIVER", "sqlite")
-	dbSource := getEnv("DB_SOURCE", "./portfolio.db")
+
+	// Detect if DATABASE_URL is present (e.g. Render, Supabase, Neon, Railway)
+	databaseURL := os.Getenv("DATABASE_URL")
+	defaultDriver := "sqlite"
+	defaultSource := "./portfolio.db"
+
+	if databaseURL != "" {
+		defaultDriver = "postgres"
+		defaultSource = databaseURL
+	}
+
+	dbDriver := getEnv("DB_DRIVER", defaultDriver)
+	dbSource := getEnv("DB_SOURCE", defaultSource)
 
 	adminIDStr := getEnv("ADMIN_DEFAULT_ID", "1")
 	adminID, err := strconv.Atoi(adminIDStr)

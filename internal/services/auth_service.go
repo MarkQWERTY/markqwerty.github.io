@@ -9,18 +9,21 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
+	"portfolio/internal/db"
 	"portfolio/internal/models"
 )
 
 type AuthService struct {
 	db        *sql.DB
 	jwtSecret []byte
+	driver    string
 }
 
-func NewAuthService(db *sql.DB, secret string) *AuthService {
+func NewAuthService(database *sql.DB, secret string, driver string) *AuthService {
 	return &AuthService{
-		db:        db,
+		db:        database,
 		jwtSecret: []byte(secret),
+		driver:    driver,
 	}
 }
 
@@ -32,7 +35,8 @@ type Claims struct {
 
 func (s *AuthService) Login(id int, password string) (*models.LoginResponse, error) {
 	var admin models.Administrador
-	row := s.db.QueryRow("SELECT Id, Password, Nombre, Apellidos, Created_At FROM ADMINISTRADOR WHERE Id = ?", id)
+	query := db.AdaptQuery("SELECT Id, Password, Nombre, Apellidos, Created_At FROM ADMINISTRADOR WHERE Id = ?", s.driver)
+	row := s.db.QueryRow(query, id)
 	err := row.Scan(&admin.ID, &admin.Password, &admin.Nombre, &admin.Apellidos, &admin.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -69,7 +73,8 @@ func (s *AuthService) Login(id int, password string) (*models.LoginResponse, err
 
 func (s *AuthService) GetAdminByID(id int) (*models.Administrador, error) {
 	var admin models.Administrador
-	row := s.db.QueryRow("SELECT Id, Nombre, Apellidos, Created_At FROM ADMINISTRADOR WHERE Id = ?", id)
+	query := db.AdaptQuery("SELECT Id, Nombre, Apellidos, Created_At FROM ADMINISTRADOR WHERE Id = ?", s.driver)
+	row := s.db.QueryRow(query, id)
 	err := row.Scan(&admin.ID, &admin.Nombre, &admin.Apellidos, &admin.CreatedAt)
 	if err != nil {
 		return nil, err
@@ -79,7 +84,8 @@ func (s *AuthService) GetAdminByID(id int) (*models.Administrador, error) {
 
 func (s *AuthService) ChangePassword(id int, oldPassword, newPassword string) error {
 	var currentHashed string
-	err := s.db.QueryRow("SELECT Password FROM ADMINISTRADOR WHERE Id = ?", id).Scan(&currentHashed)
+	query := db.AdaptQuery("SELECT Password FROM ADMINISTRADOR WHERE Id = ?", s.driver)
+	err := s.db.QueryRow(query, id).Scan(&currentHashed)
 	if err != nil {
 		return errors.New("administrador no encontrado")
 	}
@@ -93,7 +99,8 @@ func (s *AuthService) ChangePassword(id int, oldPassword, newPassword string) er
 		return fmt.Errorf("error al procesar la nueva contraseña: %w", err)
 	}
 
-	_, err = s.db.Exec("UPDATE ADMINISTRADOR SET Password = ? WHERE Id = ?", string(newHashed), id)
+	updateQuery := db.AdaptQuery("UPDATE ADMINISTRADOR SET Password = ? WHERE Id = ?", s.driver)
+	_, err = s.db.Exec(updateQuery, string(newHashed), id)
 	return err
 }
 

@@ -5,15 +5,20 @@ import (
 	"errors"
 	"fmt"
 
+	"portfolio/internal/db"
 	"portfolio/internal/models"
 )
 
 type ProjectService struct {
-	db *sql.DB
+	db     *sql.DB
+	driver string
 }
 
-func NewProjectService(db *sql.DB) *ProjectService {
-	return &ProjectService{db: db}
+func NewProjectService(database *sql.DB, driver string) *ProjectService {
+	return &ProjectService{
+		db:     database,
+		driver: driver,
+	}
 }
 
 func (s *ProjectService) GetAll() ([]models.Proyecto, error) {
@@ -42,7 +47,8 @@ func (s *ProjectService) GetAll() ([]models.Proyecto, error) {
 func (s *ProjectService) GetByID(id int) (*models.Proyecto, error) {
 	var p models.Proyecto
 	var enlace sql.NullString
-	row := s.db.QueryRow("SELECT ID_proyecto, Nombre_p, Descripcion, Github, Enlace, Created_At FROM PROYECTO WHERE ID_proyecto = ?", id)
+	query := db.AdaptQuery("SELECT ID_proyecto, Nombre_p, Descripcion, Github, Enlace, Created_At FROM PROYECTO WHERE ID_proyecto = ?", s.driver)
+	row := s.db.QueryRow(query, id)
 	err := row.Scan(&p.ID_proyecto, &p.Nombre_p, &p.Descripcion, &p.Github, &enlace, &p.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -60,6 +66,15 @@ func (s *ProjectService) GetByID(id int) (*models.Proyecto, error) {
 func (s *ProjectService) Create(p *models.Proyecto) error {
 	if p.Nombre_p == "" || p.Descripcion == "" || p.Github == "" {
 		return errors.New("los campos Nombre_p, Descripcion y Github son obligatorios")
+	}
+
+	if s.driver == "postgres" || s.driver == "postgresql" {
+		query := "INSERT INTO PROYECTO (Nombre_p, Descripcion, Github, Enlace) VALUES ($1, $2, $3, $4) RETURNING ID_proyecto"
+		err := s.db.QueryRow(query, p.Nombre_p, p.Descripcion, p.Github, p.Enlace).Scan(&p.ID_proyecto)
+		if err != nil {
+			return fmt.Errorf("error al insertar proyecto en postgres: %w", err)
+		}
+		return nil
 	}
 
 	result, err := s.db.Exec(
@@ -82,10 +97,8 @@ func (s *ProjectService) Update(id int, p *models.Proyecto) error {
 		return errors.New("los campos Nombre_p, Descripcion y Github son obligatorios")
 	}
 
-	result, err := s.db.Exec(
-		"UPDATE PROYECTO SET Nombre_p = ?, Descripcion = ?, Github = ?, Enlace = ? WHERE ID_proyecto = ?",
-		p.Nombre_p, p.Descripcion, p.Github, p.Enlace, id,
-	)
+	query := db.AdaptQuery("UPDATE PROYECTO SET Nombre_p = ?, Descripcion = ?, Github = ?, Enlace = ? WHERE ID_proyecto = ?", s.driver)
+	result, err := s.db.Exec(query, p.Nombre_p, p.Descripcion, p.Github, p.Enlace, id)
 	if err != nil {
 		return fmt.Errorf("error al actualizar proyecto: %w", err)
 	}
@@ -100,7 +113,8 @@ func (s *ProjectService) Update(id int, p *models.Proyecto) error {
 }
 
 func (s *ProjectService) Delete(id int) error {
-	result, err := s.db.Exec("DELETE FROM PROYECTO WHERE ID_proyecto = ?", id)
+	query := db.AdaptQuery("DELETE FROM PROYECTO WHERE ID_proyecto = ?", s.driver)
+	result, err := s.db.Exec(query, id)
 	if err != nil {
 		return fmt.Errorf("error al eliminar proyecto: %w", err)
 	}
