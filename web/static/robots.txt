@@ -1,0 +1,14 @@
+# /robots.txt
+User-agent: *
+Allow: /
+Allow: /static/
+Allow: /web/static/
+Allow: /projects/
+
+# Block admin and internal API endpoints
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /api/v1/
+
+Sitemap: https://marcosgarciaguerra.github.io/sitemap.xml

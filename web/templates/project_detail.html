@@ -4,7 +4,42 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{.Project.Nombre_p}} - Detalle del Proyecto</title>
+    
+    <!-- SEO Primary Meta Tags -->
+    <title>{{.Project.Nombre_p}} | Proyecto de Marcos García</title>
+    <meta name="title" content="{{.Project.Nombre_p}} | Proyecto de Marcos García" />
+    <meta name="description" content="{{.Project.Descripcion}}" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://marcosgarciaguerra.github.io/projects/{{.Project.ID_proyecto}}" />
+
+    <!-- GEO / Local SEO Meta Tags -->
+    <meta name="geo.region" content="ES-MD" />
+    <meta name="geo.placename" content="Madrid" />
+    <meta name="geo.position" content="40.416775;-3.703790" />
+    <meta name="ICBM" content="40.416775, -3.703790" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://marcosgarciaguerra.github.io/projects/{{.Project.ID_proyecto}}" />
+    <meta property="og:title" content="{{.Project.Nombre_p}} | Proyecto de Marcos García" />
+    <meta property="og:description" content="{{.Project.Descripcion}}" />
+    <meta property="og:image" content="https://marcosgarciaguerra.github.io/web/static/img/yo.png" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/web/static/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/web/static/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/web/static/img/favicon/favicon-96x96.png">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,67 +68,61 @@
             }
         }
     </script>
-    <link rel="icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
-    <link rel="shortcut icon" type="image/x-icon" href="/web/static/img/favicon/favicon.ico">
-    <link rel="apple-touch-icon" sizes="57x57" href="/web/static/img/favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/web/static/img/favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/web/static/img/favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/web/static/img/favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/web/static/img/favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/web/static/img/favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/web/static/img/favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/web/static/img/favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/web/static/img/favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/web/static/img/favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/web/static/img/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/web/static/img/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/web/static/img/favicon/favicon-16x16.png">
-    <link rel="manifest" href="/web/static/img/favicon/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="/web/static/img/favicon/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
-        rel="stylesheet" />
     <link rel="stylesheet" href="/static/css/styles.css">
+
+    <!-- Schema JSON-LD for Project / CreativeWork -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "{{.Project.Nombre_p}}",
+      "description": "{{.Project.Descripcion}}",
+      "author": {
+        "@type": "Person",
+        "name": "Marcos García",
+        "url": "https://marcosgarciaguerra.github.io/"
+      },
+      "codeRepository": "{{.Project.Github}}"{{if .Project.Enlace}},
+      "url": "{{.Project.Enlace}}"{{end}}
+    }
+    </script>
 </head>
 
 <body class="bg-background font-mono text-on-surface">
 
+    <!-- Skip link -->
+    <a href="#project-detail-content" class="skip-link">Saltar al contenido principal</a>
+
+    <!-- Header -->
     <header class="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-outline-variant">
         <div class="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-3 text-xs text-primary-fixed hover:text-white transition-colors">
-                <span class="material-symbols-outlined text-sm">arrow_back</span> VOLVER AL PORTAFOLIO
+            <a href="/" class="flex items-center gap-3 text-xs text-primary-fixed hover:text-white transition-colors font-bold py-2 min-h-[44px]">
+                <span class="material-symbols-outlined text-sm" aria-hidden="true">arrow_back</span> VOLVER AL PORTAFOLIO
             </a>
             <div class="flex items-center gap-3">
-                <img src="/web/static/img/favicon/favicon-96x96.png" alt="favicon" class="w-8 h-8">
+                <img src="/web/static/img/favicon/favicon-96x96.png" alt="Logo Marcos García" class="w-8 h-8">
                 <span class="text-xl font-bold tracking-tighter text-primary">MARCOS GARCÍA</span>
             </div>
         </div>
     </header>
 
-    <main class="w-full pt-28 pb-24 px-6">
+    <main id="project-detail-content" class="w-full pt-28 pb-24 px-6">
         <div class="max-w-[1200px] mx-auto">
-            <div class="mb-8 border-b border-outline-variant pb-6">
-                <span class="text-xs text-primary-fixed font-bold block mb-2">PROYECTO #{{.Project.ID_proyecto}}</span>
-                <h1 class="text-4xl md:text-6xl font-extrabold text-primary uppercase mb-4">{{.Project.Nombre_p}}</h1>
-                <p class="text-sm text-on-surface-variant max-w-3xl leading-relaxed">{{.Project.Descripcion}}</p>
+            
+            <div class="mb-8 border-b border-outline-variant pb-6 reveal-on-scroll">
+                <span class="text-xs text-primary-fixed font-bold block mb-2 font-mono">PROYECTO #{{.Project.ID_proyecto}}</span>
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-primary uppercase mb-4">{{.Project.Nombre_p}}</h1>
+                <p class="text-base text-on-surface-variant max-w-3xl leading-relaxed">{{.Project.Descripcion}}</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                <div class="lg:col-span-2 border border-outline-variant bg-surface-container p-8">
-                    <h2 class="text-xl font-bold text-primary mb-4 border-l-4 border-primary-fixed pl-3">VISIÓN GENERAL
-                    </h2>
+                <section aria-labelledby="overview-heading" class="lg:col-span-2 border border-outline-variant bg-surface-container p-8 tech-glow-hover reveal-on-scroll">
+                    <h2 id="overview-heading" class="text-xl font-bold text-primary mb-4 border-l-4 border-primary-fixed pl-3">VISIÓN GENERAL</h2>
                     <p class="text-sm text-on-surface-variant leading-relaxed mb-6">
-                        Este proyecto fue diseñado e implementado como parte del portafolio profesional para demostrar
-                        capacidad técnica en desarrollo backend con Go, integración con PostgreSQL y despliegue
-                        continuo.
+                        Este proyecto fue diseñado e implementado como parte del portafolio profesional para demostrar capacidad técnica en desarrollo backend con Go, integración con PostgreSQL y despliegue continuo.
                     </p>
                     <div class="p-6 border border-outline-variant bg-surface-container-low mb-6">
-                        <span class="text-xs font-bold text-primary-fixed block mb-2">DETALLES TÉCNICOS &
-                            ARQUITECTURA</span>
+                        <h3 class="text-xs font-bold text-primary-fixed block mb-2 uppercase">Detalles Técnicos &amp; Arquitectura</h3>
                         <ul class="list-disc list-inside text-xs text-on-surface-variant space-y-2">
                             <li>Backend en Go con arquitectura limpia monolítica modular.</li>
                             <li>Autenticación segura mediante JWT y hashing de contraseñas con Bcrypt.</li>
@@ -101,55 +130,51 @@
                             <li>Formulario de contacto funcional y panel de administración interactivo.</li>
                         </ul>
                     </div>
-                </div>
+                </section>
 
-                <div class="border border-outline-variant bg-surface-container p-6 flex flex-col justify-between">
+                <aside aria-labelledby="links-heading" class="border border-outline-variant bg-surface-container p-6 flex flex-col justify-between tech-glow-hover reveal-on-scroll delay-100">
                     <div>
-                        <h2 class="text-xl font-bold text-primary mb-4 border-l-4 border-primary-fixed pl-3">ACCESOS &
-                            ENLACES</h2>
+                        <h2 id="links-heading" class="text-xl font-bold text-primary mb-4 border-l-4 border-primary-fixed pl-3">ACCESOS &amp; ENLACES</h2>
                         <div class="flex flex-col gap-4">
                             <div class="p-4 border border-outline-variant bg-surface-container-low">
                                 <span class="text-xs text-on-surface-variant block mb-1">REPOSITORIO DE CÓDIGO</span>
-                                <a href="{{.Project.Github}}" target="_blank" rel="noopener noreferrer"
-                                    class="text-sm font-bold text-primary-fixed hover:underline flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-sm">code</span> Ver en GitHub
+                                <a href="{{.Project.Github}}" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-primary-fixed hover:underline flex items-center gap-1 min-h-[40px]" aria-label="Ver repositorio de código en GitHub">
+                                    <span class="material-symbols-outlined text-sm" aria-hidden="true">code</span> Ver en GitHub
                                 </a>
                             </div>
 
                             {{if .Project.Enlace}}
                             <div class="p-4 border border-outline-variant bg-surface-container-low">
-                                <span class="text-xs text-on-surface-variant block mb-1">DEMO O APLICACIÓN EN
-                                    VIVO</span>
-                                <a href="{{.Project.Enlace}}" target="_blank" rel="noopener noreferrer"
-                                    class="text-sm font-bold text-primary-fixed hover:underline flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-sm">play_arrow</span> Probar Aplicación
+                                <span class="text-xs text-on-surface-variant block mb-1">DEMO O APLICACIÓN EN VIVO</span>
+                                <a href="{{.Project.Enlace}}" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-primary-fixed hover:underline flex items-center gap-1 min-h-[40px]" aria-label="Probar aplicación en vivo">
+                                    <span class="material-symbols-outlined text-sm" aria-hidden="true">play_arrow</span> Probar Aplicación
                                 </a>
                             </div>
                             {{else}}
                             <div class="p-4 border border-outline-variant bg-surface-container-low opacity-60">
-                                <span class="text-xs text-on-surface-variant block">Demo en vivo no disponible para este
-                                    proyecto.</span>
+                                <span class="text-xs text-on-surface-variant block">Demo en vivo no disponible para este proyecto.</span>
                             </div>
                             {{end}}
                         </div>
                     </div>
 
                     <div class="mt-8 pt-4 border-t border-outline-variant">
-                        <a href="/"
-                            class="w-full py-3 border border-primary text-primary hover:bg-surface-container-high transition-colors font-bold text-center block text-xs">
+                        <a href="/" class="w-full py-3 border border-primary text-primary hover:bg-surface-container-high hover:border-primary-fixed hover:text-primary-fixed transition-colors font-bold text-center block text-xs min-h-[44px] flex items-center justify-center">
                             VOLVER A LA LISTA
                         </a>
                     </div>
-                </div>
+                </aside>
             </div>
         </div>
     </main>
 
     <footer class="border-t border-outline-variant py-8 px-6 bg-background">
         <div class="max-w-[1440px] mx-auto text-center text-xs text-on-surface-variant">
-            &copy; 2026 Marcos García. Todos los derechos reservados.
+            &copy; 2026 Marcos García. Todos los derechos reservados · Madrid, España.
         </div>
     </footer>
+
+    <script src="/static/js/main.js"></script>
 </body>
 
 </html>

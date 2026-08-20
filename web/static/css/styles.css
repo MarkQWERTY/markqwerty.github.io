@@ -1,25 +1,234 @@
 /* Styles for Portfolio v2 */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+    --color-bg: #111508;
+    --color-surface: #1e2113;
+    --color-surface-low: #1a1d10;
+    --color-surface-high: #282b1d;
+    --color-surface-highest: #333627;
+    --color-primary: #ffffff;
+    --color-primary-fixed: #c3f400;
+    --color-on-primary-fixed: #161e00;
+    --color-on-surface: #e2e4cf;
+    --color-on-surface-variant: #c4c9ac;
+    --color-outline: #8e9379;
+    --color-outline-variant: #444933;
+}
+
+html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+}
 
 body {
     font-family: 'JetBrains Mono', monospace;
-    background-color: #111508;
-    color: #e2e4cf;
+    background-color: var(--color-bg);
+    color: var(--color-on-surface);
+    overflow-x: hidden;
 }
 
+/* =========================================
+   ACCESSIBILITY: Skip Link & Focus States
+   ========================================= */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 1rem;
+    background: var(--color-primary-fixed);
+    color: var(--color-on-primary-fixed);
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    z-index: 9999;
+    border: 2px solid #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(195, 244, 0, 0.4);
+    transition: top 0.2s ease-in-out;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+    top: 1rem;
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* Clear, high-contrast focus outlines (WCAG 2.2 Level AA) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--color-primary-fixed) !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 10px rgba(195, 244, 0, 0.5);
+}
+
+/* Ensure focused items clear sticky header */
+:target {
+    scroll-margin-top: 90px;
+}
+
+:focus {
+    scroll-margin-top: 90px;
+    scroll-margin-bottom: 60px;
+}
+
+/* Accessible visually hidden class */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #111508;
+    background: var(--color-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #444933;
+    background: var(--color-outline-variant);
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #c3f400;
+    background: var(--color-primary-fixed);
+}
+
+/* =========================================
+   AESTHETICS: Scroll Progress Bar
+   ========================================= */
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #c3f400, #ffffff);
+    z-index: 100;
+    box-shadow: 0 0 8px rgba(195, 244, 0, 0.8);
+    transition: width 0.05s linear;
+}
+
+/* =========================================
+   AESTHETICS: Animations & Reveal Effects
+   ========================================= */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+}
+
+.reveal-on-scroll.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger delay helpers */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+
+/* Subtle Glow and Interactive Hover Effects */
+.tech-glow-hover {
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.tech-glow-hover:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary-fixed);
+    box-shadow: 0 12px 28px -6px rgba(195, 244, 0, 0.12), 0 0 1px 1px var(--color-primary-fixed);
+}
+
+.ambient-glow {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(195, 244, 0, 0.09) 0%, rgba(17, 21, 8, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(40px);
+}
+
+/* Floating animation for badge / decorative elements */
+@keyframes subtle-float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.animate-subtle-float {
+    animation: subtle-float 4s ease-in-out infinite;
+}
+
+/* Pulse beacon animation for status */
+@keyframes beacon-pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(195, 244, 0, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(195, 244, 0, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(195, 244, 0, 0);
+    }
+}
+
+.status-beacon {
+    animation: beacon-pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* =========================================
+   ACCESSIBILITY: Reduced Motion Media Query
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+    
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .reveal-on-scroll {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .tech-glow-hover:hover {
+        transform: none !important;
+    }
+
+    .animate-subtle-float,
+    .status-beacon {
+        animation: none !important;
+    }
 }

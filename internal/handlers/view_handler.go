@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -41,8 +42,13 @@ func (h *ViewHandler) RenderHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cvPath := filepath.Join("web", "static", "cv.pdf")
+	_, cvErr := os.Stat(cvPath)
+	hasCV := !os.IsNotExist(cvErr)
+
 	data := map[string]interface{}{
 		"Projects": projects,
+		"HasCV":    hasCV,
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

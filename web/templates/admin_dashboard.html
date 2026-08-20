@@ -124,6 +124,10 @@
                     class="py-3 px-6 text-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-primary">
                     MENSAJES DE CONTACTO
                 </button>
+                <button id="tab-cv"
+                    class="py-3 px-6 text-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-primary">
+                    GESTIONAR CV
+                </button>
                 <button id="tab-security"
                     class="py-3 px-6 text-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-primary">
                     CAMBIAR CONTRASEÑA
@@ -228,6 +232,56 @@
                             <!-- Inyectado dinámicamente con JS -->
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <!-- SECCIÓN GESTIÓN DE CV -->
+            <section id="section-cv" class="hidden flex flex-col gap-6">
+                <div class="border-b border-outline-variant pb-4 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-primary uppercase">GESTIÓN DE CURRÍCULUM VITAE (CV)</h2>
+                        <p class="text-xs text-on-surface-variant mt-1">Sube, visualiza o elimina el archivo PDF de tu CV visible en el portafolio</p>
+                    </div>
+                </div>
+
+                <div class="max-w-2xl border border-outline-variant bg-surface-container p-6 flex flex-col gap-6">
+                    <div id="cv-alert" class="hidden p-3 text-xs font-bold"></div>
+
+                    <!-- ESTADO ACTUAL DEL CV -->
+                    <div id="cv-status-container" class="p-4 border border-outline-variant bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-3xl text-primary-fixed" aria-hidden="true">description</span>
+                            <div>
+                                <span id="cv-status-title" class="text-sm font-bold text-primary block">Comprobando archivo...</span>
+                                <span id="cv-status-subtitle" class="text-xs text-on-surface-variant">Estado del archivo PDF</span>
+                            </div>
+                        </div>
+                        <div id="cv-actions-container" class="flex items-center gap-3">
+                            <a id="btn-view-cv" href="/static/cv.pdf" target="_blank" class="hidden px-3 py-2 text-xs border border-primary text-primary hover:bg-surface-container-high transition-colors font-bold flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">visibility</span> Ver CV Actual
+                            </a>
+                            <button id="btn-delete-cv" type="button" class="hidden px-3 py-2 text-xs bg-red-950 text-red-200 border border-red-800 hover:bg-red-900 transition-colors font-bold flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">delete</span> Eliminar CV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- FORMULARIO DE SUBIDA DE CV -->
+                    <form id="cv-upload-form" class="flex flex-col gap-4">
+                        <div>
+                            <label for="cv-file-input" class="block text-xs font-bold text-primary-fixed mb-2">
+                                SUBIR NUEVO ARCHIVO DE CV (.PDF) *
+                            </label>
+                            <input type="file" id="cv-file-input" name="cv" accept=".pdf,application/pdf" required
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-bold file:bg-primary-fixed file:text-on-primary-fixed hover:file:bg-white file:transition-colors file:cursor-pointer">
+                            <span class="text-[11px] text-on-surface-variant block mt-1">Formato admitido: PDF (Máximo 10 MB). Sobrescribe el archivo actual si ya existe.</span>
+                        </div>
+
+                        <button id="btn-submit-cv" type="submit"
+                            class="py-3 px-6 bg-primary-fixed text-on-primary-fixed font-bold hover:bg-white transition-colors border border-primary-fixed text-xs self-start flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">upload</span> GUARDAR Y PUBLICAR CV
+                        </button>
+                    </form>
                 </div>
             </section>
 

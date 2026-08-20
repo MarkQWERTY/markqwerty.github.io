@@ -30,6 +30,7 @@ func main() {
 	authHandler := handlers.NewAuthHandler(authService)
 	projectHandler := handlers.NewProjectHandler(projectService)
 	contactHandler := handlers.NewContactHandler(contactService, projectService)
+	cvHandler := handlers.NewCVHandler(filepath.Join("web", "static"))
 	viewHandler := handlers.NewViewHandler(projectService, filepath.Join("web", "templates"))
 
 	// Middlewares
@@ -42,9 +43,17 @@ func main() {
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.Handle("/web/static/", http.StripPrefix("/web/static/", fs))
 
-	// Favicon direct route
+	// Favicon and SEO direct routes
 	mux.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, filepath.Join("web", "static", "img", "favicon", "favicon.ico"))
+	})
+	mux.HandleFunc("/robots.txt", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		http.ServeFile(w, r, filepath.Join("web", "static", "robots.txt"))
+	})
+	mux.HandleFunc("/sitemap.xml", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+		http.ServeFile(w, r, filepath.Join("web", "static", "sitemap.xml"))
 	})
 
 	// HTML Views
@@ -83,6 +92,16 @@ func main() {
 	mux.Handle("/api/v1/auth/me", authMiddleware(http.HandlerFunc(authHandler.Me)))
 	mux.Handle("/api/v1/auth/password", authMiddleware(http.HandlerFunc(authHandler.ChangePassword)))
 	mux.Handle("/api/v1/dashboard/stats", authMiddleware(http.HandlerFunc(contactHandler.GetStats)))
+	mux.HandleFunc("/api/v1/cv/status", cvHandler.GetStatus)
+	mux.Handle("/api/v1/cv", authMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			cvHandler.UploadCV(w, r)
+		} else if r.Method == http.MethodDelete {
+			cvHandler.DeleteCV(w, r)
+		} else {
+			http.Error(w, `{"error":"Método no permitido"}`, http.StatusMethodNotAllowed)
+		}
+	})))
 
 	log.Printf("Server running and listening on http://localhost:%s", cfg.Port)
 	if err := http.ListenAndServe(":"+cfg.Port, mux); err != nil {

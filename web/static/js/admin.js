@@ -51,25 +51,36 @@ document.addEventListener('DOMContentLoaded', () => {
         // Tabs setup
         const tabProjects = document.getElementById('tab-projects');
         const tabSubmissions = document.getElementById('tab-submissions');
+        const tabCv = document.getElementById('tab-cv');
         const tabSecurity = document.getElementById('tab-security');
 
         const secProjects = document.getElementById('section-projects');
         const secSubmissions = document.getElementById('section-submissions');
+        const secCv = document.getElementById('section-cv');
         const secSecurity = document.getElementById('section-security');
+
+        const allTabs = [tabProjects, tabSubmissions, tabCv, tabSecurity].filter(Boolean);
+        const allSecs = [secProjects, secSubmissions, secCv, secSecurity].filter(Boolean);
 
         tabProjects.addEventListener('click', () => switchTab(tabProjects, secProjects));
         tabSubmissions.addEventListener('click', () => {
             switchTab(tabSubmissions, secSubmissions);
             loadSubmissions();
         });
+        if (tabCv) {
+            tabCv.addEventListener('click', () => {
+                switchTab(tabCv, secCv);
+                loadCVStatus();
+            });
+        }
         tabSecurity.addEventListener('click', () => switchTab(tabSecurity, secSecurity));
 
         function switchTab(activeTab, activeSec) {
-            [tabProjects, tabSubmissions, tabSecurity].forEach(t => {
+            allTabs.forEach(t => {
                 t.classList.remove('border-primary-fixed', 'text-primary-fixed');
                 t.classList.add('border-transparent', 'text-on-surface-variant');
             });
-            [secProjects, secSubmissions, secSecurity].forEach(s => s.classList.add('hidden'));
+            allSecs.forEach(s => s.classList.add('hidden'));
 
             activeTab.classList.remove('border-transparent', 'text-on-surface-variant');
             activeTab.classList.add('border-primary-fixed', 'text-primary-fixed');
@@ -154,6 +165,110 @@ document.addEventListener('DOMContentLoaded', () => {
                 showAlert(passAlert, data.error || 'Error al actualizar contraseña', 'error');
             }
         });
+
+        // CV Management Setup
+        const cvUploadForm = document.getElementById('cv-upload-form');
+        const cvAlert = document.getElementById('cv-alert');
+        const btnDeleteCv = document.getElementById('btn-delete-cv');
+
+        if (cvUploadForm) {
+            cvUploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const fileInput = document.getElementById('cv-file-input');
+                const file = fileInput.files[0];
+                if (!file) {
+                    showAlert(cvAlert, 'Por favor, selecciona un archivo PDF.', 'error');
+                    return;
+                }
+
+                if (!file.name.toLowerCase().endsWith('.pdf')) {
+                    showAlert(cvAlert, 'El archivo seleccionado debe ser un PDF (.pdf).', 'error');
+                    return;
+                }
+
+                const submitBtn = document.getElementById('btn-submit-cv');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `SUBIENDO... <span class="material-symbols-outlined text-sm animate-spin">sync</span>`;
+
+                const formData = new FormData();
+                formData.append('cv', file);
+
+                try {
+                    const res = await fetch('/api/v1/cv', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        showAlert(cvAlert, '¡CV actualizado y publicado con éxito!', 'success');
+                        cvUploadForm.reset();
+                        loadCVStatus();
+                    } else {
+                        showAlert(cvAlert, data.error || 'Error al subir el CV', 'error');
+                    }
+                } catch (err) {
+                    showAlert(cvAlert, 'Error de conexión con el servidor', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
+        }
+
+        if (btnDeleteCv) {
+            btnDeleteCv.addEventListener('click', async () => {
+                if (!confirm('¿Estás seguro de que deseas eliminar el archivo del CV? El botón de descarga dejará de estar disponible en el portafolio.')) {
+                    return;
+                }
+
+                try {
+                    const res = await fetch('/api/v1/cv', {
+                        method: 'DELETE'
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        showAlert(cvAlert, 'CV eliminado exitosamente.', 'success');
+                        loadCVStatus();
+                    } else {
+                        showAlert(cvAlert, data.error || 'Error al eliminar el CV', 'error');
+                    }
+                } catch (err) {
+                    showAlert(cvAlert, 'Error de conexión al eliminar el CV', 'error');
+                }
+            });
+        }
+    }
+
+    async function loadCVStatus() {
+        const statusTitle = document.getElementById('cv-status-title');
+        const statusSubtitle = document.getElementById('cv-status-subtitle');
+        const btnViewCv = document.getElementById('btn-view-cv');
+        const btnDeleteCv = document.getElementById('btn-delete-cv');
+        if (!statusTitle) return;
+
+        try {
+            const res = await fetch('/api/v1/cv/status');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.exists) {
+                    statusTitle.textContent = 'Archivo CV Disponible (cv.pdf)';
+                    statusTitle.className = 'text-sm font-bold text-green-400 block';
+                    statusSubtitle.textContent = 'Publicado y listo para descarga en el portafolio.';
+                    btnViewCv.classList.remove('hidden');
+                    btnDeleteCv.classList.remove('hidden');
+                } else {
+                    statusTitle.textContent = 'Sin archivo de CV configurado';
+                    statusTitle.className = 'text-sm font-bold text-yellow-400 block';
+                    statusSubtitle.textContent = 'Actualmente no hay ningún archivo PDF subido.';
+                    btnViewCv.classList.add('hidden');
+                    btnDeleteCv.classList.add('hidden');
+                }
+            }
+        } catch (err) {
+            statusTitle.textContent = 'Error consultando estado del CV';
+            statusTitle.className = 'text-sm font-bold text-red-400 block';
+        }
     }
 
     async function loadStats() {
