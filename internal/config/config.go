@@ -1,8 +1,11 @@
 package config
 
 import (
+	"log"
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -17,10 +20,17 @@ type Config struct {
 }
 
 func LoadConfig() *Config {
+	// Try loading .env file if present in root
+	if err := godotenv.Load(); err != nil {
+		log.Println("Note: No .env file found or error loading it, using system environment variables and defaults")
+	} else {
+		log.Println("Successfully loaded environment variables from .env file")
+	}
+
 	port := getEnv("PORT", "8080")
 	jwtSecret := getEnv("JWT_SECRET", "super_secret_jwt_key_change_in_production")
 
-	// Detect if DATABASE_URL is present (e.g. Render, Supabase, Neon, Railway)
+	// Detect if DATABASE_URL is present (e.g. Supabase, Render, Neon, Railway)
 	databaseURL := os.Getenv("DATABASE_URL")
 	defaultDriver := "sqlite"
 	defaultSource := "./portfolio.db"

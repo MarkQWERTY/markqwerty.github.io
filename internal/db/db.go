@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/lib/pq"
 	_ "modernc.org/sqlite"
 	"golang.org/x/crypto/bcrypt"
@@ -15,7 +16,7 @@ import (
 
 // Helper to convert queries with ? placeholders to $1, $2, ... for PostgreSQL
 func AdaptQuery(query string, driver string) string {
-	if driver != "postgres" && driver != "postgresql" {
+	if driver != "postgres" && driver != "postgresql" && driver != "pgx" {
 		return query
 	}
 
@@ -36,10 +37,11 @@ func InitDB(cfg *config.Config) (*sql.DB, error) {
 	driverName := cfg.DBDriver
 	if driverName == "sqlite3" {
 		driverName = "sqlite"
-	} else if driverName == "postgresql" {
-		driverName = "postgres"
+	} else if driverName == "postgresql" || driverName == "postgres" {
+		driverName = "pgx"
 	}
 
+	log.Printf("Connecting to database using driver: %s", driverName)
 	database, err := sql.Open(driverName, cfg.DBSource)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open database: %w", err)
@@ -48,8 +50,9 @@ func InitDB(cfg *config.Config) (*sql.DB, error) {
 	if err := database.Ping(); err != nil {
 		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
+	log.Println("Database connection successfully established and pinged.")
 
-	isPostgres := (driverName == "postgres")
+	isPostgres := (driverName == "postgres" || driverName == "pgx")
 
 	// Table schemas
 	var createAdminTable, createFormularioTable, createProyectoTable string
@@ -122,8 +125,8 @@ func InitDB(cfg *config.Config) (*sql.DB, error) {
 
 	// Seed default admin if not exists
 	var count int
-	checkAdminQuery := AdaptQuery("SELECT COUNT(*) FROM ADMINISTRADOR WHERE Id = ?", driverName)
-	err = database.QueryRow(checkAdminQuery, cfg.AdminDefaultID).Scan(&count)
+	checkAdminQuery := AdaptQuery("SELECT COUNT(*) FROM ADMINISTRADOR", driverName)
+	err = database.QueryRow(checkAdminQuery).Scan(&count)
 	if err != nil || count == 0 {
 		hashedPass, err := bcrypt.GenerateFromPassword([]byte(cfg.AdminDefaultPass), bcrypt.DefaultCost)
 		if err != nil {

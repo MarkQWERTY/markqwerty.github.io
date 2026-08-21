@@ -153,4 +153,41 @@ test.describe('Portfolio SEO, GEO, Accessibility & Functionality E2E Tests', () 
     await expect(cvDownloadBtn).toHaveAttribute('href', '/static/cv.pdf');
   });
 
+  test('7. Admin Change Credentials (ID and Password)', async ({ page }) => {
+    // 1. Login with original credentials
+    await page.goto('/admin/login');
+    await page.fill('#login-id', '1');
+    await page.fill('#login-password', 'admin123');
+    await page.click('#login-form button[type="submit"]');
+    await expect(page).toHaveURL('/admin');
+
+    // 2. Go to Security tab
+    await page.click('#tab-security');
+    await expect(page.locator('#section-security')).toBeVisible();
+
+    // 3. Fill change credentials form (new ID: 99, new Password: newpassword123)
+    await page.fill('#old-password', 'admin123');
+    await page.fill('#new-id', '99');
+    await page.fill('#new-password', 'newpassword123');
+    await page.click('#change-password-form button[type="submit"]');
+
+    // 4. Verify success alert
+    const passAlert = page.locator('#password-alert');
+    await expect(passAlert).toBeVisible();
+    await expect(passAlert).toContainText('Credenciales actualizadas');
+
+    // 5. Verify the top right header is updated with the new ID
+    const headerAdminTag = page.locator('#admin-name-tag');
+    await expect(headerAdminTag).toContainText('ID: 99');
+
+    // 6. Logout and login with new credentials
+    await page.click('#logout-btn');
+    await expect(page).toHaveURL('/admin/login');
+
+    await page.fill('#login-id', '99');
+    await page.fill('#login-password', 'newpassword123');
+    await page.click('#login-form button[type="submit"]');
+    await expect(page).toHaveURL('/admin');
+  });
+
 });

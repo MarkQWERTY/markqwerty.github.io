@@ -68,7 +68,7 @@ func (s *ProjectService) Create(p *models.Proyecto) error {
 		return errors.New("los campos Nombre_p, Descripcion y Github son obligatorios")
 	}
 
-	if s.driver == "postgres" || s.driver == "postgresql" {
+	if s.driver == "postgres" || s.driver == "postgresql" || s.driver == "pgx" {
 		query := "INSERT INTO PROYECTO (Nombre_p, Descripcion, Github, Enlace) VALUES ($1, $2, $3, $4) RETURNING ID_proyecto"
 		err := s.db.QueryRow(query, p.Nombre_p, p.Descripcion, p.Github, p.Enlace).Scan(&p.ID_proyecto)
 		if err != nil {

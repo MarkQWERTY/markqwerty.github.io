@@ -33,6 +33,21 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+func (s *AuthService) GenerateToken(admin *models.Administrador) (string, error) {
+	expirationTime := time.Now().Add(24 * time.Hour)
+	claims := &Claims{
+		AdminID: admin.ID,
+		Nombre:  admin.Nombre,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(s.jwtSecret)
+}
+
 func (s *AuthService) Login(id int, password string) (*models.LoginResponse, error) {
 	var admin models.Administrador
 	query := db.AdaptQuery("SELECT Id, Password, Nombre, Apellidos, Created_At FROM ADMINISTRADOR WHERE Id = ?", s.driver)
@@ -49,18 +64,7 @@ func (s *AuthService) Login(id int, password string) (*models.LoginResponse, err
 		return nil, errors.New("credenciales inválidas")
 	}
 
-	expirationTime := time.Now().Add(24 * time.Hour)
-	claims := &Claims{
-		AdminID: admin.ID,
-		Nombre:  admin.Nombre,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expirationTime),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(s.jwtSecret)
+	tokenString, err := s.GenerateToken(&admin)
 	if err != nil {
 		return nil, fmt.Errorf("error al generar token JWT: %w", err)
 	}
@@ -82,26 +86,56 @@ func (s *AuthService) GetAdminByID(id int) (*models.Administrador, error) {
 	return &admin, nil
 }
 
-func (s *AuthService) ChangePassword(id int, oldPassword, newPassword string) error {
-	var currentHashed string
-	query := db.AdaptQuery("SELECT Password FROM ADMINISTRADOR WHERE Id = ?", s.driver)
-	err := s.db.QueryRow(query, id).Scan(&currentHashed)
+func (s *AuthService) ChangeCredentials(id int, oldPassword, newPassword string, newID int) (string, error) {
+	var admin models.Administrador
+	query := db.AdaptQuery("SELECT Id, Password, Nombre, Apellidos, Created_At FROM ADMINISTRADOR WHERE Id = ?", s.driver)
+	row := s.db.QueryRow(query, id)
+	err := row.Scan(&admin.ID, &admin.Password, &admin.Nombre, &admin.Apellidos, &admin.CreatedAt)
 	if err != nil {
-		return errors.New("administrador no encontrado")
+		return "", errors.New("administrador no encontrado")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(currentHashed), []byte(oldPassword)); err != nil {
-		return errors.New("la contraseña actual es incorrecta")
+	if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(oldPassword)); err != nil {
+		return "", errors.New("la contraseña actual es incorrecta")
 	}
 
-	newHashed, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	updatedPassword := admin.Password
+	if newPassword != "" {
+		newHashed, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+		if err != nil {
+			return "", fmt.Errorf("error al procesar la nueva contraseña: %w", err)
+		}
+		updatedPassword = string(newHashed)
+	}
+
+	updatedID := admin.ID
+	if newID > 0 && newID != admin.ID {
+		var exists int
+		checkQuery := db.AdaptQuery("SELECT COUNT(*) FROM ADMINISTRADOR WHERE Id = ?", s.driver)
+		err = s.db.QueryRow(checkQuery, newID).Scan(&exists)
+		if err == nil && exists > 0 {
+			return "", errors.New("el nuevo ID ya está en uso")
+		}
+		updatedID = newID
+	}
+
+	if newPassword == "" && updatedID == admin.ID {
+		return "", errors.New("debe proporcionar un nuevo ID o una nueva contraseña diferente")
+	}
+
+	updateQuery := db.AdaptQuery("UPDATE ADMINISTRADOR SET Id = ?, Password = ? WHERE Id = ?", s.driver)
+	_, err = s.db.Exec(updateQuery, updatedID, updatedPassword, id)
 	if err != nil {
-		return fmt.Errorf("error al procesar la nueva contraseña: %w", err)
+		return "", fmt.Errorf("error al actualizar las credenciales: %w", err)
 	}
 
-	updateQuery := db.AdaptQuery("UPDATE ADMINISTRADOR SET Password = ? WHERE Id = ?", s.driver)
-	_, err = s.db.Exec(updateQuery, string(newHashed), id)
-	return err
+	admin.ID = updatedID
+	newToken, err := s.GenerateToken(&admin)
+	if err != nil {
+		return "", fmt.Errorf("error al generar el nuevo token: %w", err)
+	}
+
+	return newToken, nil
 }
 
 func (s *AuthService) ValidateToken(tokenString string) (*Claims, error) {

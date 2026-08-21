@@ -34,19 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function initDashboard() {
-        // Check auth status
-        try {
-            const res = await fetch('/api/v1/auth/me');
-            if (!res.ok) {
-                window.location.href = '/admin/login';
-                return;
-            }
-            const admin = await res.json();
-            adminNameTag.textContent = `Admin: ${admin.nombre} ${admin.apellidos} (ID: ${admin.id})`;
-        } catch (err) {
-            window.location.href = '/admin/login';
-            return;
-        }
+        // Check auth status asynchronously (non-blocking for UI event binding)
+        checkAuth();
+
+        // Tabs setup
 
         // Tabs setup
         const tabProjects = document.getElementById('tab-projects');
@@ -142,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Change Password Form Setup
+        // Change Password / Credentials Form Setup
         const changePassForm = document.getElementById('change-password-form');
         const passAlert = document.getElementById('password-alert');
 
@@ -150,19 +141,32 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const oldPassword = document.getElementById('old-password').value;
             const newPassword = document.getElementById('new-password').value;
+            const newIdVal = document.getElementById('new-id').value;
+            const newId = newIdVal ? parseInt(newIdVal, 10) : 0;
+
+            if (!newPassword && !newId) {
+                showAlert(passAlert, 'Debes ingresar un nuevo ID o una nueva contraseña', 'error');
+                return;
+            }
 
             const res = await fetch('/api/v1/auth/password', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ old_password: oldPassword, new_password: newPassword })
+                body: JSON.stringify({ 
+                    old_password: oldPassword, 
+                    new_password: newPassword,
+                    new_id: newId
+                })
             });
 
             const data = await res.json();
             if (res.ok) {
-                showAlert(passAlert, 'Contraseña actualizada correctamente', 'success');
+                showAlert(passAlert, 'Credenciales actualizadas correctamente', 'success');
                 changePassForm.reset();
+                // Refresh authentication status to show new ID in UI header
+                checkAuth();
             } else {
-                showAlert(passAlert, data.error || 'Error al actualizar contraseña', 'error');
+                showAlert(passAlert, data.error || 'Error al actualizar credenciales', 'error');
             }
         });
 
@@ -414,5 +418,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function escapeHtml(str) {
         return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    async function checkAuth() {
+        try {
+            const res = await fetch('/api/v1/auth/me');
+            if (!res.ok) {
+                window.location.href = '/admin/login';
+                return;
+            }
+            const admin = await res.json();
+            const adminNameTag = document.getElementById('admin-name-tag');
+            if (adminNameTag) {
+                adminNameTag.textContent = `Admin: ${admin.nombre} ${admin.apellidos} (ID: ${admin.id})`;
+            }
+        } catch (err) {
+            window.location.href = '/admin/login';
+        }
     }
 });

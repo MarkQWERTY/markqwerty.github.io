@@ -26,7 +26,7 @@ func (s *ContactService) Create(c *models.Formulario) error {
 		return errors.New("los campos Nombre, Mail y Texto son obligatorios")
 	}
 
-	if s.driver == "postgres" || s.driver == "postgresql" {
+	if s.driver == "postgres" || s.driver == "postgresql" || s.driver == "pgx" {
 		query := "INSERT INTO FORMULARIO (Nombre, Mail, Telefono, Texto) VALUES ($1, $2, $3, $4) RETURNING Id_form"
 		err := s.db.QueryRow(query, c.Nombre, c.Mail, c.Telefono, c.Texto).Scan(&c.ID_form)
 		if err != nil {

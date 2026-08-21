@@ -110,13 +110,23 @@ func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.authService.ChangePassword(adminID, req.OldPassword, req.NewPassword); err != nil {
+	newToken, err := h.authService.ChangeCredentials(adminID, req.OldPassword, req.NewPassword, req.NewID)
+	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 		return
 	}
 
+	// Update HTTP-only cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "auth_token",
+		Value:    newToken,
+		Path:     "/",
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"message": "Contraseña actualizada exitosamente"})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Credenciales actualizadas exitosamente"})
 }

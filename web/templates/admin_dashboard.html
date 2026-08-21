@@ -285,10 +285,10 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN SEGURIDAD / CAMBIAR CONTRASEÑA -->
+            <!-- SECCIÓN SEGURIDAD / ACTUALIZAR CREDENCIALES -->
             <section id="section-security" class="hidden flex flex-col gap-6">
                 <div class="border-b border-outline-variant pb-4">
-                    <h2 class="text-xl font-bold text-primary uppercase">SEGURIDAD - CAMBIAR CONTRASEÑA</h2>
+                    <h2 class="text-xl font-bold text-primary uppercase">SEGURIDAD - ACTUALIZAR CREDENCIALES</h2>
                 </div>
                 <div class="max-w-md p-6 border border-outline-variant bg-surface-container">
                     <div id="password-alert" class="hidden p-3 text-xs font-bold mb-4"></div>
@@ -299,13 +299,18 @@
                                 class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-primary-fixed mb-1">Nueva Contraseña *</label>
-                            <input type="password" id="new-password" required
-                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none">
+                            <label class="block text-xs font-bold text-primary-fixed mb-1">Nuevo ID (Opcional)</label>
+                            <input type="number" id="new-id" min="1"
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none" placeholder="Ingresa el nuevo ID numérico">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-primary-fixed mb-1">Nueva Contraseña (Opcional)</label>
+                            <input type="password" id="new-password"
+                                class="w-full p-3 bg-background border border-outline text-on-surface focus:border-primary-fixed focus:outline-none" placeholder="Ingresa la nueva contraseña">
                         </div>
                         <button type="submit"
                             class="py-3 bg-primary-fixed text-on-primary-fixed font-bold hover:bg-white transition-colors border border-primary-fixed text-xs mt-2">
-                            ACTUALIZAR CONTRASEÑA
+                            ACTUALIZAR CREDENCIALES
                         </button>
                     </form>
                 </div>
